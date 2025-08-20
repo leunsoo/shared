@@ -1,9 +1,7 @@
-import { Platform } from 'react-native';
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 
 interface TimeoutConfig {
   default: number;
-  upload: number;
 }
 
 interface RetryConfig {
@@ -29,8 +27,6 @@ interface ErrorConfig {
 
 interface ApiConfig {
   baseURL: string;
-  chatBaseURL: string;
-  socketUrl: string;
   timeout: TimeoutConfig;
   retry: RetryConfig;
   headers: AxiosRequestConfig['headers']; // 이렇게
@@ -40,13 +36,10 @@ interface ApiConfig {
 }
 
 export const API_CONFIG: ApiConfig = {
-  baseURL: 'http://i13a403.p.ssafy.io:8080', //Platform.OS === 'android' ? 'http://10.0.2.2:8080' : 'http://localhost:8080', // 일반 API 포트
-  chatBaseURL: 'http://i13a403.p.ssafy.io:8083', // 채팅 API 포트
-  socketUrl: 'ws://i13a403.p.ssafy.io:8083',
+  baseURL: '',
 
   timeout: {
-    default: 10000, // 10초
-    upload: 30000, // 파일 업로드는 30초
+    default: 5000, // 5초
   },
 
   retry: {
@@ -58,7 +51,6 @@ export const API_CONFIG: ApiConfig = {
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    'X-Platform': Platform.OS,
     'X-App-Version': '1.0.0',
   },
 
@@ -73,7 +65,7 @@ export const API_CONFIG: ApiConfig = {
   },
 
   errors: {
-    showToast: true, // 에러 토스트 표시 여부
-    logToConsole: __DEV__, // 콘솔 로그 출력 여부
+    showToast: true,
+    logToConsole: true,
   },
 };

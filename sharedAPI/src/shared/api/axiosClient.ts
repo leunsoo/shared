@@ -1,32 +1,26 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
-import { ApiResponse } from '../types/response';
-import { API_CONFIG } from './config';
-import { setupInterceptors, setInterceptorsDisabled } from './interceptors';
-import { useTokenStore } from '../token/tokenStore';
-import { isErr } from '../../utils/result';
+import axios from 'axios';
+import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import type { ApiResponse } from './response';
 
 interface CustomAxiosInstance extends AxiosInstance {
-  get<T = unknown, R = AxiosResponse<ApiResponse<T>>, D = any>(
+  get<T = unknown, R = ApiResponse<T>, D = any>(
     url: string,
     config?: Partial<InternalAxiosRequestConfig<D>>
   ): Promise<R>;
 
-  post<T = unknown, R = AxiosResponse<ApiResponse<T>>, D = any>(
+  post<T = unknown, R = ApiResponse<T>, D = any>(
     url: string,
     data?: D,
     config?: InternalAxiosRequestConfig<D>
   ): Promise<R>;
 
-  put<T = unknown, R = AxiosResponse<ApiResponse<T>>, D = any>(
+  put<T = unknown, R = ApiResponse<T>, D = any>(
     url: string,
     data?: D,
     config?: InternalAxiosRequestConfig<D>
   ): Promise<R>;
 
-  delete<T = unknown, R = AxiosResponse<ApiResponse<T>>, D = any>(
-    url: string,
-    config?: InternalAxiosRequestConfig<D>
-  ): Promise<R>;
+  delete<T = unknown, R = ApiResponse<T>, D = any>(url: string, config?: InternalAxiosRequestConfig<D>): Promise<R>;
 }
 
 // 메인 클라 (일반 API용 - 8080 포트)
@@ -81,7 +75,7 @@ const handleUnauthorized = async () => {
   if (interceptorsDisabled) {
     return;
   }
-  
+
   await useTokenStore.getState().clearTokens();
   applyTokenToClients(null);
   // AppNavigator에서 설정한 콜백 호출 (인증 상태 변경)
@@ -102,7 +96,6 @@ export const initializeApiClient = async (): Promise<void> => {
   setupInterceptors(apiClient, handleUnauthorized);
   setupInterceptors(chatApiClient, handleUnauthorized);
   setupInterceptors(uploadClient, handleUnauthorized);
-  
 };
 
 // AppNavigator에서 호출할 함수

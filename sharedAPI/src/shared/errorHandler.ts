@@ -1,7 +1,6 @@
-import { Alert } from 'react-native';
-import { AxiosError } from 'axios';
-import { API_CONFIG } from '../client/config';
-import { ErrorCodes, ErrorMessages, mapHttpStatusToErrorCode, type ErrorCode } from '../types/errors';
+import type { AxiosError } from 'axios';
+import { getApiConfig, getNotificationHandlers } from './config';
+import { ErrorCodes, ErrorMessages, mapHttpStatusToErrorCode, type ErrorCode } from './errors';
 
 interface ProcessedError {
   type: 'response_error' | 'network_error' | 'setup_error';
@@ -15,14 +14,13 @@ interface ProcessedError {
 
 export const handleApiError = (error: AxiosError): ProcessedError => {
   const processedError = processError(error);
+  const { logError } = getNotificationHandlers();
 
-  if (API_CONFIG.errors.logToConsole) {
-    console.log(`흠 ... ${error} :  ${error.toJSON}`);
+  if (logError) {
+    logError(`API Error: ${processedError.message}`, error);
   }
 
-  if (API_CONFIG.errors.showToast) {
-    showErrorToUser(processedError);
-  }
+  showErrorToUser(processedError);
 
   return processedError;
 };
@@ -66,6 +64,8 @@ const processError = (error: AxiosError): ProcessedError => {
 
 // 사용자에게 에러 알림 표시
 const showErrorToUser = (processedError: ProcessedError): void => {
+  const { showError, showToast } = getNotificationHandlers();
+  
   // 사용자에게 보여주지 않을 에러들
   const silentErrors: ErrorCode[] = [
     ErrorCodes.AUTH_TOKEN_EXPIRED, // 자동으로 로그인 페이지로 이동
@@ -83,7 +83,7 @@ const showErrorToUser = (processedError: ProcessedError): void => {
     return;
   }
 
-  // 중요한 에러는 Alert로, 일반적인 에러는 Toast로 처리
+  // 중요한 에러는 showError로, 일반적인 에러는 Toast로 처리
   const criticalErrors: ErrorCode[] = [
     ErrorCodes.SERVER_ERROR,
     ErrorCodes.NETWORK_ERROR,
@@ -91,10 +91,13 @@ const showErrorToUser = (processedError: ProcessedError): void => {
   ];
 
   if (criticalErrors.includes(processedError.code)) {
-    Alert.alert('오류 ', processedError.message);
+    if (showError) {
+      showError(processedError.message);
+    }
   } else {
-    // Toast 메시지 표시 (실제 구현에서는 Toast 라이브러리 사용)
-    console.log(' Toast:', processedError.message);
+    if (showToast) {
+      showToast(processedError.message);
+    }
   }
 };
 

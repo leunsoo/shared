@@ -1,5 +1,5 @@
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { type QueryKey } from '../lib/tanstack/queryKeyTypes';
 import { extractData, type ApiResponse } from '../types/response';
 

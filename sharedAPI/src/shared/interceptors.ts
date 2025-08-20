@@ -1,4 +1,4 @@
-import { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { Alert } from 'react-native';
 import { useTokenStore } from '../token/tokenStore';
 import { API_CONFIG } from './config';

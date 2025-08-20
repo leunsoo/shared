@@ -5,7 +5,7 @@ import { wrapAsync, Result, AsyncResult, isErr, isOk, Err, Ok } from '../../util
 import { STORAGE_KEYS } from '../../constants/storageKeys';
 import { wrapApiCall } from '../utils/apiWrapper';
 import { Token } from './tokenTypes';
-import { AxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios';
 
 export interface TokenError {
   type: 'STORAGE_ERROR' | 'NOT_FOUND' | 'REFRESH_FAILED';

@@ -1,6 +1,6 @@
-import { AxiosResponse } from 'axios';
-import { wrapAsync, AsyncResult } from '../../utils/result';
-import { ApiResponse } from '../types/response';
+import type { AxiosResponse } from 'axios';
+import { wrapAsync, AsyncResult } from './result';
+import type { ApiResponse } from './api/response';
 
 export interface ApiError {
   type: 'API_ERROR';
