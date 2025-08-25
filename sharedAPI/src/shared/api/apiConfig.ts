@@ -39,7 +39,7 @@ export const API_CONFIG: ApiConfig = {
   baseURL: '',
 
   timeout: {
-    default: 5000, // 5초
+    default: 10000, // 10초
   },
 
   retry: {

@@ -17,7 +17,7 @@ export class SimpleApiClient {
 
   constructor(storage: IStorage) {
     this.tokenManager = new TokenManager(storage);
-    
+
     const config = getApiConfig();
     this.client = axios.create({
       baseURL: config.baseURL,
@@ -41,14 +41,12 @@ export class SimpleApiClient {
       async (config: InternalAxiosRequestConfig) => {
         // 퍼블릭 엔드포인트 체크
         const isPublicEndpoint = /\/api\/auth\/(signup|login|refresh)/.test(config.url || '');
-        
+
         if (!isPublicEndpoint) {
           // 토큰 만료 체크 및 갱신
           if (this.tokenManager.isAccessTokenExpiringSoon()) {
-            const refreshResult = await this.tokenManager.refreshTokensWithCallback(
-              () => this.refreshToken()
-            );
-            
+            const refreshResult = await this.tokenManager.refreshTokensWithCallback(() => this.refreshToken());
+
             if (!isOk(refreshResult)) {
               const { showError } = getNotificationHandlers();
               if (showError) {

@@ -1,5 +1,5 @@
 import type { AxiosResponse } from 'axios';
-import { wrapAsync, AsyncResult } from './result';
+import { wrapAsync, type AsyncResult } from './result';
 import type { ApiResponse } from './api/response';
 
 export interface ApiError {
@@ -36,7 +36,6 @@ export const wrapApiCall = <T>(apicall: () => Promise<AxiosResponse<ApiResponse<
       }
     },
     (error: any) => {
-      
       // Axios 에러 또는 기타 에러 처리
       if (error.type === 'API_ERROR') {
         return error; // 이미 우리가 만든 ApiError

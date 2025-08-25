@@ -30,23 +30,6 @@ const apiClient: CustomAxiosInstance = axios.create({
   headers: API_CONFIG.headers,
 }) as CustomAxiosInstance;
 
-// 채팅 API용 클라 (8084 포트)
-const chatApiClient: CustomAxiosInstance = axios.create({
-  baseURL: API_CONFIG.chatBaseURL,
-  timeout: API_CONFIG.timeout.default,
-  headers: API_CONFIG.headers,
-}) as CustomAxiosInstance;
-
-// 파일 업로드용 클라
-const uploadClient: CustomAxiosInstance = axios.create({
-  baseURL: API_CONFIG.baseURL,
-  timeout: API_CONFIG.timeout.upload,
-  headers: {
-    ...API_CONFIG.headers,
-    'Content-Type': 'multipart/form-data',
-  },
-}) as CustomAxiosInstance;
-
 const AUTHORIZATION = 'Authorization' as const;
 
 // 토큰을 헤더에 적용
