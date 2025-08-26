@@ -65,7 +65,7 @@ const processError = (error: AxiosError): ProcessedError => {
 // 사용자에게 에러 알림 표시
 const showErrorToUser = (processedError: ProcessedError): void => {
   const { showError, showToast } = getNotificationHandlers();
-  
+
   // 사용자에게 보여주지 않을 에러들
   const silentErrors: ErrorCode[] = [
     ErrorCodes.AUTH_TOKEN_EXPIRED, // 자동으로 로그인 페이지로 이동
@@ -78,8 +78,7 @@ const showErrorToUser = (processedError: ProcessedError): void => {
   }
 
   // DATA_NOT_FOUND도 로그인 엔드포인트에서는 silent 처리
-  if (processedError.code === ErrorCodes.DATA_NOT_FOUND && 
-      processedError.url?.includes('/api/auth/login')) {
+  if (processedError.code === ErrorCodes.DATA_NOT_FOUND && processedError.url?.includes('/api/auth/login')) {
     return;
   }
 

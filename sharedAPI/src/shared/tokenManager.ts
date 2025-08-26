@@ -1,10 +1,15 @@
-import type { Token } from './tokenTypes';
 import type { IStorage } from './storage';
 import { wrapAsync, Result, isOk, isErr, Ok, Err } from './result';
 
 interface TokenError {
   type: 'STORAGE_ERROR' | 'NOT_FOUND' | 'REFRESH_FAILED';
   message: string;
+}
+export interface Token {
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiresAt: string;
+  refreshTokenExpiresAt: string;
 }
 
 const STORAGE_KEYS = {
@@ -43,7 +48,7 @@ export class TokenManager {
       },
       (error) => ({
         type: 'STORAGE_ERROR' as const,
-        message: `토큰 초기화 실패: ${error}`
+        message: `토큰 초기화 실패: ${error}`,
       })
     );
   }
@@ -65,7 +70,7 @@ export class TokenManager {
       },
       (error) => ({
         type: 'STORAGE_ERROR' as const,
-        message: `토큰 저장 실패: ${error}`
+        message: `토큰 저장 실패: ${error}`,
       })
     );
   }
@@ -88,7 +93,7 @@ export class TokenManager {
       },
       (error) => ({
         type: 'STORAGE_ERROR' as const,
-        message: `토큰 삭제 실패: ${error}`
+        message: `토큰 삭제 실패: ${error}`,
       })
     );
   }
@@ -115,7 +120,9 @@ export class TokenManager {
   }
 
   // 토큰 갱신 로직은 외부에서 주입받도록 함
-  async refreshTokensWithCallback(refreshCallback: () => Promise<Result<Token, TokenError>>): Promise<Result<boolean, TokenError>> {
+  async refreshTokensWithCallback(
+    refreshCallback: () => Promise<Result<Token, TokenError>>
+  ): Promise<Result<boolean, TokenError>> {
     // 이미 갱신 중이면 기존 Promise 반환
     if (this.refreshPromise) {
       return this.refreshPromise;
@@ -128,7 +135,7 @@ export class TokenManager {
     this.refreshPromise = (async (): Promise<Result<boolean, TokenError>> => {
       try {
         const result = await refreshCallback();
-        
+
         if (isOk(result)) {
           const setResult = await this.setTokens(result.data);
           return isOk(setResult) ? Ok(true) : Err(setResult.error);

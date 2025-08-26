@@ -27,7 +27,7 @@ export const useApi = <TData, TError = Error, TVariables = void>({
       const response = await apiFunction(variables as TVariables);
       return response.data;
     },
-    select: (data) => {
+    select: (data: any) => {
       if (data.status !== 'SUCCESS' || !data.data) {
         throw new Error('Invalid API response');
       }

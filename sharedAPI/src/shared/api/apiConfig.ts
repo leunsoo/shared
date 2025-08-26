@@ -7,17 +7,7 @@ interface TimeoutConfig {
 interface RetryConfig {
   maxAttempts: number;
   delay: number;
-  exponentialBackoff: boolean;
-}
-
-interface UploadConfig {
-  maxFileSize: number;
-  allowedTypes: string[];
-}
-
-interface PaginationConfig {
-  defaultLimit: number;
-  maxLimit: number;
+  // exponentialBackoff: boolean;
 }
 
 interface ErrorConfig {
@@ -29,13 +19,11 @@ interface ApiConfig {
   baseURL: string;
   timeout: TimeoutConfig;
   retry: RetryConfig;
-  headers: AxiosRequestConfig['headers']; // 이렇게
-  upload: UploadConfig;
-  pagination: PaginationConfig;
+  headers: AxiosRequestConfig['headers'];
   errors: ErrorConfig;
 }
 
-export const API_CONFIG: ApiConfig = {
+const currentConfig: ApiConfig = {
   baseURL: '',
 
   timeout: {
@@ -45,23 +33,12 @@ export const API_CONFIG: ApiConfig = {
   retry: {
     maxAttempts: 3, // 최대 재시도 횟수
     delay: 1000, // 재시도 간격 (밀리초)
-    exponentialBackoff: true, // 지수적 백오프 사용 여부
+    // exponentialBackoff: true, // 지수적 백오프 사용 여부
   },
 
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    'X-App-Version': '1.0.0',
-  },
-
-  upload: {
-    maxFileSize: 10 * 1024 * 1024, // 10MB
-    allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
-  },
-
-  pagination: {
-    defaultLimit: 20,
-    maxLimit: 100,
   },
 
   errors: {
@@ -69,3 +46,5 @@ export const API_CONFIG: ApiConfig = {
     logToConsole: true,
   },
 };
+
+export const getApiConfig = (): Readonly<ApiConfig> => ({ ...currentConfig });
