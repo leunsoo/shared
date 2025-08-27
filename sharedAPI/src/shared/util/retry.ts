@@ -1,6 +1,6 @@
 import type { InternalAxiosRequestConfig, AxiosError } from 'axios';
-import { getApiConfig } from './config';
-import { ErrorCheckers } from './errorHandler';
+import { getApiConfig } from '../config/apiConfig';
+import { mapHttpStatusToErrorType, ERROR_TYPES, isRetryableError } from './appErrors';
 
 interface RetryState {
   attempt: number;
@@ -25,8 +25,8 @@ export const retryRequest = async (
   if (!retryState) {
     retryState = {
       attempt: 0,
-      maxAttempts: apiConfig.retryAttempts,
-      delay: apiConfig.retryDelay,
+      maxAttempts: apiConfig.retry.maxAttempts,
+      delay: apiConfig.retry.delay,
     };
   }
 
@@ -38,15 +38,13 @@ export const retryRequest = async (
 
   // 재시도 가능한 에러인지 확인
   const processedError = {
-    code: error.response?.status
-      ? require('./errors').mapHttpStatusToErrorCode(error.response.status)
-      : require('./errors').ErrorCodes.NETWORK_ERROR,
+    code: error.response?.status ? mapHttpStatusToErrorType(error.response.status) : ERROR_TYPES.NETWORK_ERROR,
     type: error.response ? ('response_error' as const) : ('network_error' as const),
     statusCode: error.response?.status,
     message: error.message,
   };
 
-  if (!ErrorCheckers.isRetryableError(processedError)) {
+  if (!isRetryableError(processedError)) {
     retryStates.delete(requestId);
     return false;
   }
