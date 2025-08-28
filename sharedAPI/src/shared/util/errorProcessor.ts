@@ -37,7 +37,7 @@ export class ErrorProcessor {
       return appError;
     } else {
       // 요청 설정 에러
-      const appError = createAppError(ERROR_TYPES.REQUEST_ERROR, '요청 처리 중 오류가 발생했습니다', {
+      const appError = createAppError(ERROR_TYPES.BAD_REQUEST, '요청 처리 중 오류가 발생했습니다', {
         retryable: false,
         silent: false,
       });
@@ -74,11 +74,7 @@ export class ErrorProcessor {
     const { showError, showToast } = getNotificationHandlers();
 
     // 중요한 에러는 다이얼로그로, 일반 에러는 토스트로
-    const criticalErrors = [
-      ERROR_TYPES.INTERNAL_SERVER_ERROR,
-      ERROR_TYPES.NETWORK_ERROR,
-      ERROR_TYPES.PERMISSION_DENIED,
-    ];
+    const criticalErrors = [ERROR_TYPES.INTERNER_SERVER_ERROR];
 
     if (criticalErrors.includes(error.type as any)) {
       if (showError) {
@@ -127,11 +123,7 @@ export class ErrorProcessor {
     if (!errorCode) return false;
 
     const silentErrors = [
-      'AUTH_TOKEN_EXPIRED', // 자동으로 로그인 페이지로 이동
       'USER_NOT_FOUND', // 로그인 시 신규 사용자는 정상 플로우
-      'TOKEN_STORAGE_ERROR', // 토큰 저장 에러
-      'TOKEN_NOT_FOUND', // 토큰 없음
-      'TOKEN_REFRESH_FAILED', // 토큰 갱신 실패
     ];
 
     return silentErrors.includes(errorCode);
