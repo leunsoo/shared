@@ -26,46 +26,48 @@ export const wrapSync = <T>(func: () => T): Result<T, AppError> => {
     return Ok(result);
   } catch (error) {
     console.error('Sync function error:', error);
-    
+
     // 에러 타입에 따라 적절한 ErrorProcessor 메서드 호출
     let appError;
     if (error && typeof error === 'object' && 'isAxiosError' in error) {
       appError = ErrorProcessor.processAxiosError(error as any);
     } else {
       // 일반 에러는 AppError로 변환
-      appError = createAppError(ERROR_TYPES.UNKNOWN_ERROR, error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다');
+      appError = createAppError(
+        ERROR_TYPES.UNKNOWN_ERROR,
+        error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다'
+      );
       ErrorProcessor.showToUser(appError);
     }
-    
+
     return Err(appError);
   }
 };
 
-
 // 비동기 함수를 Result 패턴으로 감싸기 + ErrorProcessor 자동 처리
-export const wrapAsync = async <T>(
-  func: () => Promise<T>
-): Promise<Result<T, AppError>> => {
+export const wrapAsync = async <T>(func: () => Promise<T>): Promise<Result<T, AppError>> => {
   try {
     const result = await func();
     return Ok(result);
   } catch (error) {
     console.error('Async function error:', error);
-    
+
     // 에러 타입에 따라 적절한 ErrorProcessor 메서드 호출
     let appError;
     if (error && typeof error === 'object' && 'isAxiosError' in error) {
       appError = ErrorProcessor.processAxiosError(error as any);
     } else {
       // 일반 에러는 AppError로 변환
-      appError = createAppError(ERROR_TYPES.UNKNOWN_ERROR, error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다');
+      appError = createAppError(
+        ERROR_TYPES.UNKNOWN_ERROR,
+        error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다'
+      );
       ErrorProcessor.showToUser(appError);
     }
-    
+
     return Err(appError);
   }
 };
-
 
 // Result 값이 성공인지 확인하는 타입 가드
 export const isOk = <T, E>(result: Result<T, E>): result is { success: true; data: T; error: null } => {

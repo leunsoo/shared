@@ -97,8 +97,8 @@ export class ApiClient {
     this.client.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
         // 퍼블릭 엔드포인트가 아닌 경우 토큰 추가
-        const isPublicEndpoint =
-          /\/api\/(auth\/(signup|check-nickname|refresh|login|profile\/presigned-url))(\/.*)?$/.test(config.url || '');
+        const isPublicEndpoint = '';
+        //ex) /\/api\/(auth\/(signup|check-nickname|refresh|login))(\/.*)?$/.test(config.url || '');
 
         if (!isPublicEndpoint) {
           // 인터셉터가 비활성화된 경우 화이트리스트 체크
