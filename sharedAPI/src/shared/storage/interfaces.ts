@@ -34,23 +34,3 @@ export interface IStorage {
    */
   clear(): Promise<void>;
 }
-
-/**
- * Storage 에러 타입
- */
-export interface StorageError {
-  type: 'STORAGE_UNAVAILABLE' | 'OPERATION_FAILED' | 'QUOTA_EXCEEDED';
-  message: string;
-  originalError?: unknown;
-}
-
-/**
- * Storage 작업 결과 타입
- */
-export type StorageResult<T = void> = Promise<{
-  success: true;
-  data: T;
-} | {
-  success: false;
-  error: StorageError;
-}>;

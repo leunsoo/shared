@@ -66,7 +66,7 @@ export type ErrorType = (typeof ERROR_TYPES)[keyof typeof ERROR_TYPES];
 export const ERROR_MESSAGES: Record<string, string> = {
   // 인증 관련
   [ERROR_TYPES.AUTH_TOKEN_EXPIRED]: '로그인이 만료되었습니다. 다시 로그인해주세요.',
-  [ERROR_TYPES.AUTH_TOKEN_INVALID]: '유효하지 않은 인증 정보입니다.',
+  [ERROR_TYPES.AUTH_TOKEN_INVALID]: '401 에러 메시지를 넣어주세요.',
   [ERROR_TYPES.AUTH_PERMISSION_DENIED]: '권한이 없습니다.',
   [ERROR_TYPES.TOKEN_EXPIRED]: '로그인이 만료되었습니다. 다시 로그인해주세요.',
   [ERROR_TYPES.INVALID_CREDENTIALS]: '유효하지 않은 인증 정보입니다.',
